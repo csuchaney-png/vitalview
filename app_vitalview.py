@@ -8,7 +8,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
-# --- SAFE XLSX EXPORT FALLBACK ---
+# --- SAFE XLSX EXPORT FALLBACK --
+
 try:
     import xlsxwriter  # used implicitly by pandas
     HAS_XLSX = True
@@ -337,9 +338,7 @@ PLAN_FEATURES = {
     "enterprise": {"exports": True},
 }
 
-# ----------------------------
-# Auth: SQLite + bcrypt
-# ----------------------------
+
 DB_PATH = "vitalview_users.db"
 
 def init_db():
@@ -367,8 +366,7 @@ def add_user(name, email, password, plan="free"):
         st.error("Enter name, email, and password.")
         return
     conn = sqlite3.connect(DB_PATH)
-    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-    try:
+
         conn.execute("INSERT INTO users(name,email,password,plan) VALUES(?,?,?,?)",
                      (name.strip(), email.strip(), hashed, plan))
         conn.commit()
@@ -384,12 +382,7 @@ def login_user(email, password):
     cur.execute("SELECT name,email,password,plan FROM users WHERE email=?", (email.strip(),))
     row = cur.fetchone()
     conn.close()
-    if row and bcrypt.checkpw(password.encode(), row[2].encode()):
-        st.session_state.user = {"name": row[0], "email": row[1], "plan": row[3]}
-        st.success(f"👋 Welcome back, {row[0]}!")
-        st.experimental_rerun()
-    else:
-        st.error("❌ Incorrect email or password.")
+
 
 def logout_user():
     st.session_state.user = None
@@ -436,7 +429,7 @@ def finish_reset(email, code, newpwd):
     if time.time() > int(exp):
         conn.close(); return False, "Code expired."
 
-    hashed = bcrypt.hashpw(newpwd.encode(), bcrypt.gensalt()).decode()
+    
     conn.execute("UPDATE users SET password=? WHERE email=?", (hashed, email))
     conn.execute("DELETE FROM password_resets WHERE email=?", (email,))
     conn.commit(); conn.close()
