@@ -2,7 +2,7 @@
 # Run: pip install streamlit pandas numpy altair bcrypt
 # Optional: pip install stripe reportlab
 
-import os, time, secrets, sqlite3, bcrypt
+import os, time, secrets, sqlite3
 from urllib.parse import quote_plus
 import streamlit as st
 import pandas as pd
