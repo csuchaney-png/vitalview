@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+plotly
+altair
+matplotlib
+seaborn
+requests
+openpyxl
+xlrd
+scikit-learn
+python-dateutil
+pyyaml
+protobuf==3.20.3
